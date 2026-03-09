@@ -1,4 +1,5 @@
 """Flask ML prediction server for SmartLoan Analyzer."""
+import os
 import json
 import joblib
 import numpy as np
@@ -8,11 +9,14 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+# Use absolute paths relative to this script's directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Load model and metadata
-model = joblib.load('model.pkl')
-with open('model_metrics.json', 'r') as f:
+model = joblib.load(os.path.join(BASE_DIR, 'model.pkl'))
+with open(os.path.join(BASE_DIR, 'model_metrics.json'), 'r') as f:
     model_metrics = json.load(f)
-with open('dataset_stats.json', 'r') as f:
+with open(os.path.join(BASE_DIR, 'dataset_stats.json'), 'r') as f:
     dataset_stats = json.load(f)
 
 FEATURES = ['age', 'monthly_income', 'loan_amount', 'credit_score',
