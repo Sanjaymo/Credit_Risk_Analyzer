@@ -12,7 +12,7 @@
 
 ## 🚀 Live Demo
 
-**[SmartLoan Analyzer → ADD_LINK_HERE](#)**
+**[SmartLoan Analyzer](#)**
 
 > Enter borrower details and get an instant ML-powered credit risk assessment.
 
@@ -154,7 +154,7 @@ ng serve
 
 ## Author
 
-**Sanjay Choudhari** — Data Science Enthusiast
+**Sanjay Choudhari** — Data Scientist, FullStack Developer
 
 ---
 
