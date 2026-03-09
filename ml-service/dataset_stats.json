@@ -1,0 +1,105 @@
+{
+  "total_records": 10000,
+  "default_rate": 0.1733,
+  "feature_stats": {
+    "age": {
+      "mean": 43.54,
+      "std": 14.91,
+      "min": 18.0,
+      "max": 69.0
+    },
+    "monthly_income": {
+      "mean": 58854.34,
+      "std": 38757.36,
+      "min": 15000.0,
+      "max": 407352.0
+    },
+    "loan_amount": {
+      "mean": 604251.54,
+      "std": 545843.54,
+      "min": 50000.0,
+      "max": 5000000.0
+    },
+    "credit_score": {
+      "mean": 678.45,
+      "std": 79.68,
+      "min": 322.0,
+      "max": 850.0
+    },
+    "employment_years": {
+      "mean": 4.96,
+      "std": 4.91,
+      "min": 0.0,
+      "max": 40.0
+    },
+    "existing_loans": {
+      "mean": 1.5,
+      "std": 1.21,
+      "min": 0.0,
+      "max": 8.0
+    }
+  },
+  "default_by_income_bracket": {
+    "<25k": {
+      "count": 1290,
+      "default_rate": 0.3628
+    },
+    "25k-50k": {
+      "count": 3866,
+      "default_rate": 0.1968
+    },
+    "50k-75k": {
+      "count": 2456,
+      "default_rate": 0.1226
+    },
+    "75k-1L": {
+      "count": 1181,
+      "default_rate": 0.0948
+    },
+    "1L-1.5L": {
+      "count": 887,
+      "default_rate": 0.0812
+    },
+    "1.5L+": {
+      "count": 320,
+      "default_rate": 0.0594
+    }
+  },
+  "default_by_credit_bracket": {
+    "300-500": {
+      "count": 136,
+      "default_rate": 0.9485
+    },
+    "500-600": {
+      "count": 1529,
+      "default_rate": 0.535
+    },
+    "600-700": {
+      "count": 4413,
+      "default_rate": 0.1437
+    },
+    "700-750": {
+      "count": 2039,
+      "default_rate": 0.0505
+    },
+    "750-850": {
+      "count": 1883,
+      "default_rate": 0.026
+    }
+  },
+  "loan_amount_distribution": {
+    "<1L": 294,
+    "1L-3L": 2864,
+    "3L-5L": 2490,
+    "5L-10L": 2823,
+    "10L-20L": 1246,
+    "20L+": 283
+  },
+  "age_distribution": {
+    "18-25": 1322,
+    "25-35": 1928,
+    "35-45": 1992,
+    "45-55": 1914,
+    "55-70": 2667
+  }
+}

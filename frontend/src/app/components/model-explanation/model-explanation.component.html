@@ -1,0 +1,134 @@
+<section class="model-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="section-title"><i class="fas fa-brain"></i> Model Explanation</h1>
+      <p class="section-subtitle">Understanding how the credit risk prediction model works</p>
+    </div>
+
+    <!-- Pipeline -->
+    <div class="pipeline-section">
+      <h2 class="sub-heading">ML Pipeline</h2>
+      <div class="pipeline">
+        @for (step of pipelineSteps; track step.title; let i = $index) {
+          <div class="pipeline-step card">
+            <div class="step-number">{{ i + 1 }}</div>
+            <div class="step-icon"><i class="fas {{ step.icon }}"></i></div>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.desc }}</p>
+          </div>
+          @if (i < pipelineSteps.length - 1) {
+            <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+          }
+        }
+      </div>
+    </div>
+
+    @if (loading) {
+      <div class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading model metrics...</p>
+      </div>
+    }
+
+    @if (error) {
+      <div class="error-card card">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>{{ error }}</p>
+      </div>
+    }
+
+    @if (!loading && modelInfo) {
+      <!-- Metrics -->
+      <div class="metrics-section">
+        <h2 class="sub-heading">Performance Metrics</h2>
+        <div class="metrics-grid">
+          <div class="metric-card card">
+            <div class="metric-ring" style="--progress: {{ modelInfo.accuracy * 100 }}; --ring-color: #4361ee">
+              <span class="metric-value">{{ (modelInfo.accuracy * 100).toFixed(1) }}%</span>
+            </div>
+            <span class="metric-label">Accuracy</span>
+            <span class="metric-desc">Overall correctness</span>
+          </div>
+          <div class="metric-card card">
+            <div class="metric-ring" style="--progress: {{ modelInfo.precision * 100 }}; --ring-color: #06d6a0">
+              <span class="metric-value">{{ (modelInfo.precision * 100).toFixed(1) }}%</span>
+            </div>
+            <span class="metric-label">Precision</span>
+            <span class="metric-desc">True positive accuracy</span>
+          </div>
+          <div class="metric-card card">
+            <div class="metric-ring" style="--progress: {{ modelInfo.recall * 100 }}; --ring-color: #ffd166">
+              <span class="metric-value">{{ (modelInfo.recall * 100).toFixed(1) }}%</span>
+            </div>
+            <span class="metric-label">Recall</span>
+            <span class="metric-desc">Default detection rate</span>
+          </div>
+          <div class="metric-card card">
+            <div class="metric-ring" style="--progress: {{ modelInfo.f1_score * 100 }}; --ring-color: #7209b7">
+              <span class="metric-value">{{ (modelInfo.f1_score * 100).toFixed(1) }}%</span>
+            </div>
+            <span class="metric-label">F1 Score</span>
+            <span class="metric-desc">Precision-Recall balance</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confusion Matrix -->
+      <div class="confusion-section">
+        <h2 class="sub-heading">Confusion Matrix</h2>
+        <div class="confusion-wrapper">
+          <div class="confusion-matrix">
+            <div class="cm-header"></div>
+            <div class="cm-header cm-label">Predicted: No Default</div>
+            <div class="cm-header cm-label">Predicted: Default</div>
+
+            <div class="cm-row-label">Actual: No Default</div>
+            <div class="cm-cell cm-tn">{{ getConfusionValue(0, 0) }}</div>
+            <div class="cm-cell cm-fp">{{ getConfusionValue(0, 1) }}</div>
+
+            <div class="cm-row-label">Actual: Default</div>
+            <div class="cm-cell cm-fn">{{ getConfusionValue(1, 0) }}</div>
+            <div class="cm-cell cm-tp">{{ getConfusionValue(1, 1) }}</div>
+          </div>
+          <div class="cm-legend">
+            <span class="cm-legend-item"><span class="cm-dot tn"></span> True Negative</span>
+            <span class="cm-legend-item"><span class="cm-dot tp"></span> True Positive</span>
+            <span class="cm-legend-item"><span class="cm-dot fp"></span> False Positive</span>
+            <span class="cm-legend-item"><span class="cm-dot fn"></span> False Negative</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Model Details -->
+      <div class="details-section">
+        <h2 class="sub-heading">Model Details</h2>
+        <div class="details-grid">
+          <div class="detail-item card">
+            <span class="detail-label">Algorithm</span>
+            <span class="detail-value">{{ modelInfo.algorithm }}</span>
+          </div>
+          <div class="detail-item card">
+            <span class="detail-label">Training Size</span>
+            <span class="detail-value">{{ modelInfo.train_size | number }} records</span>
+          </div>
+          <div class="detail-item card">
+            <span class="detail-label">Test Size</span>
+            <span class="detail-value">{{ modelInfo.test_size | number }} records</span>
+          </div>
+          <div class="detail-item card">
+            <span class="detail-label">Dataset Total</span>
+            <span class="detail-value">{{ modelInfo.dataset_size | number }} records</span>
+          </div>
+          <div class="detail-item card">
+            <span class="detail-label">Features</span>
+            <span class="detail-value">{{ modelInfo.features?.length || 6 }} inputs</span>
+          </div>
+          <div class="detail-item card">
+            <span class="detail-label">Preprocessing</span>
+            <span class="detail-value">StandardScaler</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>

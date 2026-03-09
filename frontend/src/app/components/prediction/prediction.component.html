@@ -1,0 +1,206 @@
+<section class="prediction-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="section-title"><i class="fas fa-bolt"></i> Prediction Tool</h1>
+      <p class="section-subtitle">Enter borrower details to assess credit risk using our trained ML model</p>
+    </div>
+
+    <div class="prediction-layout">
+      <!-- Input Form -->
+      <div class="form-panel card">
+        <h2 class="panel-title"><i class="fas fa-user-edit"></i> Borrower Information</h2>
+        <form (ngSubmit)="onSubmit()" class="prediction-form">
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="age">
+                <i class="fas fa-birthday-cake"></i> Age
+              </label>
+              <input
+                type="number" id="age"
+                [(ngModel)]="formData.age" name="age"
+                min="18" max="100" required
+                placeholder="e.g. 35">
+              <span class="form-hint">18 – 100 years</span>
+            </div>
+
+            <div class="form-group">
+              <label for="monthlyIncome">
+                <i class="fas fa-rupee-sign"></i> Monthly Income (₹)
+              </label>
+              <input
+                type="number" id="monthlyIncome"
+                [(ngModel)]="formData.monthlyIncome" name="monthlyIncome"
+                min="0" required
+                placeholder="e.g. 5500">
+              <span class="form-hint">Gross monthly income</span>
+            </div>
+
+            <div class="form-group">
+              <label for="loanAmount">
+                <i class="fas fa-money-bill-wave"></i> Loan Amount (₹)
+              </label>
+              <input
+                type="number" id="loanAmount"
+                [(ngModel)]="formData.loanAmount" name="loanAmount"
+                min="0" required
+                placeholder="e.g. 15000">
+              <span class="form-hint">Requested loan amount</span>
+            </div>
+
+            <div class="form-group">
+              <label for="creditScore">
+                <i class="fas fa-star"></i> Credit Score
+              </label>
+              <input
+                type="number" id="creditScore"
+                [(ngModel)]="formData.creditScore" name="creditScore"
+                min="300" max="850" required
+                placeholder="e.g. 680">
+              <span class="form-hint">300 – 850 FICO range</span>
+            </div>
+
+            <div class="form-group">
+              <label for="employmentYears">
+                <i class="fas fa-briefcase"></i> Employment Years
+              </label>
+              <input
+                type="number" id="employmentYears"
+                [(ngModel)]="formData.employmentYears" name="employmentYears"
+                min="0" step="0.5" required
+                placeholder="e.g. 5">
+              <span class="form-hint">Years at current job</span>
+            </div>
+
+            <div class="form-group">
+              <label for="existingLoans">
+                <i class="fas fa-layer-group"></i> Existing Loans
+              </label>
+              <input
+                type="number" id="existingLoans"
+                [(ngModel)]="formData.existingLoans" name="existingLoans"
+                min="0" required
+                placeholder="e.g. 1">
+              <span class="form-hint">Number of active loans</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg" [disabled]="loading">
+              @if (loading) {
+                <i class="fas fa-spinner fa-spin"></i> Analyzing...
+              } @else {
+                <i class="fas fa-search"></i> Predict Risk
+              }
+            </button>
+            <button type="button" class="btn btn-outline" (click)="resetForm()">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="result-panel">
+        @if (error) {
+          <div class="error-card card">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>{{ error }}</p>
+          </div>
+        }
+
+        @if (result) {
+          <div class="result-card card" [class]="getRiskClass()">
+            <h2 class="panel-title"><i class="fas fa-chart-line"></i> Risk Assessment</h2>
+
+            <!-- Gauge -->
+            <div class="gauge-container">
+              <svg class="gauge" viewBox="0 0 200 120">
+                <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" />
+                <path class="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100"
+                  [attr.stroke]="getRiskColor()"
+                  [style.stroke-dashoffset]="251 - (251 * result.defaultProbability)" />
+                <circle class="gauge-dot" cx="100" cy="100" r="4" [attr.fill]="getRiskColor()"
+                  [style.transform]="'rotate(' + getGaugeRotation() + 'deg)'"
+                  style="transform-origin: 100px 100px" />
+              </svg>
+              <div class="gauge-value" [style.color]="getRiskColor()">
+                {{ getPercentage() }}%
+              </div>
+              <div class="gauge-label">Default Probability</div>
+            </div>
+
+            <!-- Risk Level -->
+            <div class="risk-badge-container">
+              <span class="risk-badge" [style.background]="getRiskColor()">
+                {{ result.riskLevel }}
+              </span>
+            </div>
+
+            <!-- Details -->
+            <div class="result-details">
+              <div class="detail-row">
+                <span class="detail-label">Default Probability</span>
+                <span class="detail-value">{{ (result.defaultProbability * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Risk Classification</span>
+                <span class="detail-value" [style.color]="getRiskColor()">{{ result.riskLevel }}</span>
+              </div>
+              <div class="detail-row recommendation">
+                <span class="detail-label">Recommendation</span>
+                <span class="detail-value">{{ result.recommendation }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Summary -->
+          <div class="summary-card card">
+            <h3 class="panel-subtitle">Input Summary</h3>
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">Age</span>
+                <span class="summary-value">{{ formData.age }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Income</span>
+                <span class="summary-value">₹{{ formData.monthlyIncome | number }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Loan</span>
+                <span class="summary-value">₹{{ formData.loanAmount | number }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Credit</span>
+                <span class="summary-value">{{ formData.creditScore }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Employed</span>
+                <span class="summary-value">{{ formData.employmentYears }}yr</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Loans</span>
+                <span class="summary-value">{{ formData.existingLoans }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Download Report -->
+          <div class="download-card card">
+            <button class="btn btn-download" (click)="downloadReport()">
+              <i class="fas fa-download"></i> Download Prediction Report
+            </button>
+          </div>
+        }
+
+        @if (!result && !error) {
+          <div class="placeholder-card card">
+            <i class="fas fa-arrow-left"></i>
+            <h3>Enter Borrower Details</h3>
+            <p>Fill the form and click "Predict Risk" to get an instant credit risk assessment.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>
