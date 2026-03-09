@@ -12,7 +12,7 @@
 
 ## 🚀 Live Demo
 
-**[SmartLoan Analyzer](https://smartloan-ml.onrender.com)**
+**[SmartLoan Analyzer](https://smartloan-frontend.onrender.com)**
 
 > Enter borrower details and get an instant ML-powered credit risk assessment.
 
