@@ -1,0 +1,29 @@
+services:
+  # Python ML Service
+  - type: web
+    name: smartloan-ml
+    runtime: python
+    rootDir: ml-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn predict_server:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.6
+    plan: free
+
+  # Node.js Backend API
+  - type: web
+    name: smartloan-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: ML_SERVICE_URL
+        fromService:
+          name: smartloan-ml
+          type: web
+          property: url
+      - key: MONGODB_URI
+        sync: false
+    plan: free

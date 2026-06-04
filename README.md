@@ -10,11 +10,13 @@
 
 ---
 
-## 🚀 Live Demo
+## 🚀 Deployment Targets
 
-**[SmartLoan Analyzer](https://smartloan-frontend.onrender.com)**
+- Frontend: Vercel
+- Backend API: Render
+- ML Service: Render
 
-> Enter borrower details and get an instant ML-powered credit risk assessment.
+> The frontend should call `/api`, and Vercel rewrites `/api/*` to the Render backend.
 
 ---
 
@@ -90,6 +92,9 @@ Make sure the following are installed before proceeding:
 - [MongoDB](https://mongodb.com) (local instance or Atlas cluster)
 - Angular CLI — `npm install -g @angular/cli`
 
+For deployment, use a MongoDB Atlas driver URI in `MONGODB_URI`.
+Use the connection string from Atlas "Connect > Drivers", not a Compass sharing link.
+
 ---
 
 ### 1. ML Service
@@ -116,6 +121,8 @@ npm run dev
 
 > Runs on **http://localhost:5000**
 
+If you are deploying, set `MONGODB_URI` to your Atlas connection string and keep `ML_SERVICE_URL` pointed at the deployed Flask service.
+
 ---
 
 ### 3. Frontend
@@ -127,6 +134,8 @@ ng serve
 ```
 
 > Runs on **http://localhost:4200**
+
+For Vercel deployment, use the `frontend/vercel.json` rewrite rules so the Angular app can reach the Render backend API.
 
 ---
 
