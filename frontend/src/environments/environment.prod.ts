@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '/api'
+  apiUrl: 'https://credit-risk-analyzer-1-oo5y.onrender.com'
 };
